@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Display Network</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .ad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 40px;
+        }
+
+        .ad-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .ad-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .ad-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .ad-card:hover .ad-image {
+            transform: scale(1.05);
+        }
+
+        .ad-content {
+            padding: 25px;
+        }
+
+        .ad-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .ad-description {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .ad-cta {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .ad-cta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .stats {
+            text-align: center;
+            padding: 20px 40px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .sponsored-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .ad-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Ad Network</h1>
+            <p>Discover amazing products and services</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="impressions">12,456</div>
+                <div class="stat-label">Impressions</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="clicks">1,234</div>
+                <div class="stat-label">Clicks</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="ctr">9.9%</div>
+                <div class="stat-label">CTR</div>
+            </div>
+        </div>
+
+        <div class="ad-grid" id="adGrid">
+            <!-- Ads will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Sample ad data - Replace with your actual ad data from API/database
+        const sampleAds = [
+            {
+                id: 1,
+                image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=200&fit=crop',
+                title: 'Premium Coffee Beans',
+                description: 'Experience the richest coffee flavors from around the world. Freshly roasted daily.',
+                url: 'https://example.com/coffee',
+                sponsored: true
+            },
+            {
+                id: 2,
+                image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=200&fit=crop',
+                title: 'Fitness Tracker Pro',
+                description: 'Track your health goals with our advanced wearable technology.',
+                url: 'https://example.com/fitness',
+                sponsored: false
+            },
+            {
+                id: 3,
+                image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=200&fit=crop',
+                title: 'Learn Coding Online',
+                description: 'Master programming with expert-led courses. Start your tech journey today!',
+                url: 'https://example.com/coding',
+                sponsored: true
+            },
+            {
+                id: 4,
+                image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca6e71?w=400&h=200&fit=crop',
+                title: 'Designer Headphones',
+                description: 'Immerse yourself in crystal-clear sound with our premium audio equipment.',
+                url: 'https://example.com/headphones',
+                sponsored: false
+            }
+        ];
+
+        let impressions = 12456;
+        let clicks = 1234;
+
+        function createAdCard(ad) {
+            const card = document.createElement('div');
+            card.className = 'ad-card';
+            card.onclick = () => handleClick(ad.url);
+            
+            card.innerHTML = `
+                ${ad.sponsored ? '<div class="sponsored-tag">SPONSORED</div>' : ''}
+                <img src="${ad.image}" alt="${ad.title}" class="ad-image">
+                <div class="ad-content">
+                    <div class="ad-title">${ad.title}</div>
+                    <div class="ad-description">${ad.description}</div>
+                    <button class="ad-cta">Learn More →</button>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function handleClick(url) {
+            clicks++;
+            updateStats();
+            window.open(url, '_blank');
+            // Here you would typically send click data to your ad server
+            console.log('Ad clicked:', url);
+        }
+
+        function updateStats() {
+            document.getElementById('impressions').textContent = impressions.toLocaleString();
+            document.getElementById('clicks').textContent = clicks.toLocaleString();
+            const ctr = ((clicks / impressions) * 100).toFixed(1);
+            document.getElementById('ctr').textContent = ctr + '%';
+        }
+
+        // Initialize the ad grid
+        function initAds() {
+            const adGrid = document.getElementById('adGrid');
+            sampleAds.forEach(ad => {
+                adGrid.appendChild(createAdCard(ad));
+                impressions++;
+            });
+            updateStats();
+        }
+
+        // Auto-rotate ads every 30 seconds (optional)
+        function rotateAds() {
+            setInterval(() => {
+                const cards = document.querySelectorAll('.ad-card');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '0.5';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                        }, 300);
+                    }, index * 100);
+                });
+            }, 30000);
+        }
+
+        // Load ads when page loads
+        window.addEventListener('load', () => {
+            initAds();
+            rotateAds();
+        });
+
+        // Track impressions on scroll
+        window.addEventListener('scroll', () => {
+            const cards = document.querySelectorAll('.ad-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    // Ad is visible - increment impression
+                }
+            });
+        });
+    </script>
+</body>
+</html>
